@@ -5,7 +5,7 @@ import (
 	"os"
 	mattermost "github.com/mattermost/platform/model"
 	"math/big"
-	"github.com/lechuckcaptain/mattermost/api"
+	"github.com/lechuckcaptain/mattermost-utils/api"
 )
 
 func main() {
