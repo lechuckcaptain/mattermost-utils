@@ -2,8 +2,6 @@ package main
 
 import (
 	"net/url"
-	"os"
-	"log"
 )
 
 func CheckServer(server string) bool {
@@ -14,13 +12,5 @@ func CheckServer(server string) bool {
 	} else {
 		return true
 	}
-}
-
-func GetExecutable() string {
-	ex, e := os.Executable()
-	if e != nil {
-		log.Fatal("Couldn't get executable process")
-	}
-	return ex
 }
 

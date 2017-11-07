@@ -15,6 +15,11 @@ func main() {
 	app.Run(os.Args)
 }
 
+func GetExecutable() string {
+
+	return "teamcheck"
+}
+
 func run(url string, username string, password string, channelToCheck string) {
 
 	args := os.Args
