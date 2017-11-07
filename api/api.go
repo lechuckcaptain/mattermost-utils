@@ -1,8 +1,8 @@
 package api
 
 import (
-	"log"
 	mattermost "github.com/mattermost/platform/model"
+	"log"
 	"time"
 )
 
@@ -68,7 +68,7 @@ func GetPosts(client *mattermost.Client, channelId string, start int, max int) *
 
 func GetTodaysPosts(client *mattermost.Client, channelId string) *mattermost.PostList {
 	n := time.Now()
-	today := time.Date(n.Year(),n.Month(),n.Day(),0,0,0,0, n.Location()).Unix()
+	today := time.Date(n.Year(), n.Month(), n.Day(), 0, 0, 0, 0, n.Location()).Unix()
 	r, e := client.GetPostsSince(channelId, today)
 	if e != nil {
 		log.Fatal("Couldn't get posts: ", e)
@@ -78,7 +78,6 @@ func GetTodaysPosts(client *mattermost.Client, channelId string) *mattermost.Pos
 }
 
 func GetUsersFromPosts(posts *mattermost.PostList) {
-
 
 	//var m map[string]
 	//
