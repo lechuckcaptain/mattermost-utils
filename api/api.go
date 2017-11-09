@@ -6,15 +6,14 @@ import (
 	"time"
 )
 
-func GetClient(url string, username string, password string) *mattermost.Client {
+func GetClient(url string, username string, password string) *mattermost.Client4 {
 
-	client := mattermost.NewClient(url)
-	r, e := client.Login(username, password)
-	if e != nil {
-		log.Fatal("Couldn't login: ", e)
+	client := mattermost.NewAPIv4Client(url)
+	user, response := client.Login(username, password)
+	if response.Error != nil {
+		log.Fatal("Couldn't login: ", response.Error)
 	}
-	log.Printf("Client logged in to '%v'. Auth Token: %s.", url, client.AuthToken)
-	user := r.Data.(*mattermost.User)
+	log.Printf("User '%v' logged in to '%v'. Auth Token: %s.", user.Username, client.ApiUrl, client.AuthToken)
 	log.Printf("User information: %s", user.ToJson())
 	return client
 }
