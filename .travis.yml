@@ -31,6 +31,7 @@ script:
  - cat mattermost-docker/volumes/app/mattermost/config/config.json
  - pushd mattermost-docker
  - docker-compose up -d
+ - nmap localhost -p 80,8065 -A
  - docker exec -it mattermostdocker_app_1 ./platform version
  - docker exec -it mattermostdocker_app_1 ./platform user create --email ci@ci.com --username ci --password cicicici
  - docker exec -it mattermostdocker_app_1 ./platform user activate ci
@@ -39,5 +40,5 @@ script:
  - docker exec -it mattermostdocker_app_1 ./platform team add ci ci
  - popd
  - teamcheck --help
- - teamcheck --server http://127.0.0.1:80 --user ci --password cicicici --channel town-square
+ - teamcheck --server http://localhost:80 --user ci --password cicicici --channel town-square
 
