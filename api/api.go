@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 	"math"
-	"math/big"
 )
 
 func Login(client *mattermost.Client4, username string, password string) () {
@@ -37,7 +36,7 @@ func GetChannels(client *mattermost.Client4, teamId string) []*mattermost.Channe
 }
 
 func GetTeamMemmbers(client *mattermost.Client4, teamId string) []*mattermost.TeamMember {
-	tm, response := client.GetTeamMembers(teamId, 0, big.MaxExp, "")
+	tm, response := client.GetTeamMembers(teamId, 0, math.MaxInt64, "")
 	if response.Error != nil {
 		log.Fatal("Couldn't get team members: ", response.Error)
 	}
