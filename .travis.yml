@@ -1,11 +1,22 @@
+sudo: required
 language: go
 
 go:
- - 1.8
  - 1.9
  - master
 
+services:
+  - docker
+
+before_install:
+  - ls
+  - git clone https://github.com/mattermost/mattermost-docker.git .
+  - ls
+  - docker-compose build
+  - docker-compose up -d
+  - docker ps -a
+
 script:
- - cd teamcheck
  - go version
+ - cd teamcheck
  - go build
