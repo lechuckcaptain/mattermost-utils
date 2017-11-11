@@ -1,11 +1,42 @@
+sudo: required
 language: go
 
 go:
- - 1.8
  - 1.9
  - master
 
+services:
+  - docker
+
+before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -qq tree
+
 script:
- - cd teamcheck
- - go version
+ - pushd teamcheck
  - go build
+ - go install
+ - popd
+ - mkdir mattermost-docker
+ - git clone https://github.com/mattermost/mattermost-docker.git mattermost-docker
+ - pushd mattermost-docker
+ - docker-compose build
+ - docker-compose up -d
+ - docker ps -a
+ - docker-compose down
+ - docker ps -a
+ - popd
+ - sudo cp config.json mattermost-docker/volumes/app/mattermost/config/config.json
+ - cat mattermost-docker/volumes/app/mattermost/config/config.json
+ - pushd mattermost-docker
+ - docker-compose up -d
+ - docker exec -it mattermostdocker_app_1 ./platform version
+ - docker exec -it mattermostdocker_app_1 ./platform user create --email ci@ci.com --username ci --password cicicici
+ - docker exec -it mattermostdocker_app_1 ./platform user activate ci
+ - docker exec -it mattermostdocker_app_1 ./platform roles system_admin ci
+ - docker exec -it mattermostdocker_app_1 ./platform team create --name ci --display_name "CI"
+ - docker exec -it mattermostdocker_app_1 ./platform team add ci ci
+ - popd
+ - teamcheck --help
+ - teamcheck --server http://127.0.0.1:80 --user ci --password cicicici --channel town-square
+

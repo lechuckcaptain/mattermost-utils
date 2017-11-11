@@ -4,57 +4,43 @@ import (
 	mattermost "github.com/mattermost/platform/model"
 	"log"
 	"time"
+	"math"
 )
 
-func GetClient(url string, username string, password string) *mattermost.Client {
+func Login(client *mattermost.Client4, username string, password string) () {
 
-	client := mattermost.NewClient(url)
-	r, e := client.Login(username, password)
-	if e != nil {
-		log.Fatal("Couldn't login: ", e)
+	user, response := client.Login(username, password)
+
+	if response.Error != nil {
+		log.Fatal("Couldn't login: ", response.Error)
 	}
-	log.Printf("Client logged in to '%v'. Auth Token: %s.", url, client.AuthToken)
-	user := r.Data.(*mattermost.User)
+
+	log.Printf("User '%v' logged in to '%v'. Auth Token: %s.", user.Username, client.ApiUrl, client.AuthToken)
 	log.Printf("User information: %s", user.ToJson())
-	return client
 }
 
-func PrintTeams(teamMap map[string]*mattermost.Team) {
-	log.Printf("Found %v teams:", len(teamMap))
-	for teamId, team := range teamMap {
-		log.Printf("* %s -> %s", teamId, team.DisplayName)
+func GetTeams(client *mattermost.Client4) []*mattermost.Team {
+	teams, response := client.GetAllTeams("",0,math.MaxInt64)
+	if response.Error != nil {
+		log.Fatal("Couldn't get team map: ", response.Error)
 	}
+	return teams
 }
 
-func PrintChannels(channelList *mattermost.ChannelList) {
-	log.Printf("Found %v channels:", len(*channelList))
-	for _, channel := range *channelList {
-		log.Printf("* %s -> %s", channel.Id, channel.DisplayName)
+func GetChannels(client *mattermost.Client4, teamId string) []*mattermost.Channel {
+	channels, response := client.GetPublicChannelsForTeam(teamId, 0,math.MaxInt64,"")
+	if response.Error != nil {
+		log.Fatal("Couldn't get channels: ", response.Error)
 	}
+	return channels
 }
 
-func PrintPosts(posts *mattermost.PostList) {
-	log.Print("Posts:")
-	for _, post := range posts.Posts {
-		log.Printf("%s -> '%s' by %v @ %v", post.Id, post.Message, post.UserId, post.CreateAt)
+func GetTeamMemmbers(client *mattermost.Client4, teamId string) []*mattermost.TeamMember {
+	tm, response := client.GetTeamMembers(teamId, 0, math.MaxInt64, "")
+	if response.Error != nil {
+		log.Fatal("Couldn't get team members: ", response.Error)
 	}
-}
-
-func GetTeams(client *mattermost.Client) map[string]*mattermost.Team {
-	r, e := client.GetAllTeams()
-	if e != nil {
-		log.Fatal("Couldn't get team map: ", e)
-	}
-	teamMap := r.Data.(map[string]*mattermost.Team)
-	return teamMap
-}
-
-func GetChannels(client *mattermost.Client) *mattermost.ChannelList {
-	r, e := client.GetChannels("")
-	if e != nil {
-		log.Fatal("Couldn't get channels: ", e)
-	}
-	return r.Data.(*mattermost.ChannelList)
+	return tm
 }
 
 func GetPosts(client *mattermost.Client, channelId string, start int, max int) *mattermost.PostList {
@@ -66,14 +52,13 @@ func GetPosts(client *mattermost.Client, channelId string, start int, max int) *
 	return posts
 }
 
-func GetTodaysPosts(client *mattermost.Client, channelId string) *mattermost.PostList {
+func GetTodaysPosts(client *mattermost.Client4, channelId string) *mattermost.PostList {
 	n := time.Now()
 	today := time.Date(n.Year(), n.Month(), n.Day(), 0, 0, 0, 0, n.Location()).Unix()
-	r, e := client.GetPostsSince(channelId, today)
-	if e != nil {
-		log.Fatal("Couldn't get posts: ", e)
+	posts, response := client.GetPostsSince(channelId, today)
+	if response.Error != nil {
+		log.Fatal("Couldn't get posts: ", response.Error)
 	}
-	posts := r.Data.(*mattermost.PostList)
 	return posts
 }
 
