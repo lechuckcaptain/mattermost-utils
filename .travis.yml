@@ -37,5 +37,6 @@ script:
  - docker exec -it mattermostdocker_app_1 ./platform team create --name ci --display_name "CI"
  - docker exec -it mattermostdocker_app_1 ./platform team add ci ci
  - popd
- - teamcheck
+ - teamcheck --help
+ - teamcheck --server http://127.0.0.1:80 --user ci --password cicicici --channel town-square
 
