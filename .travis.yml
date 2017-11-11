@@ -22,6 +22,8 @@ script:
  - docker-compose down
  - docker ps -a
  - popd
+ - ls mattermost-docker
+ - tree mattermost-docker
  - cp config.json mattermost-docker/volumes/app/mattermost/config/config.json
  - pushd mattermost-docker
  - docker-compose up -d
