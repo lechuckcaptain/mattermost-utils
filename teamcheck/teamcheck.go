@@ -3,9 +3,7 @@ package main
 import (
 	mattermost "github.com/mattermost/platform/model"
 	"github.com/lechuckcaptain/mattermost-utils/api"
-	mattermost "github.com/mattermost/platform/model"
 	"log"
-	"math/big"
 	"os"
 )
 
