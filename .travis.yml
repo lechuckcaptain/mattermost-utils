@@ -28,7 +28,10 @@ script:
  - popd
  - ls mattermost-docker
  - tree mattermost-docker
- - cp config.json mattermost-docker/volumes/app/mattermost/config/config.json
+ - ls mattermost-docker/volumes/app/mattermost/config/
+ - cat mattermost-docker/volumes/app/mattermost/config/config.json
+ - sudo cp config.json mattermost-docker/volumes/app/mattermost/config/config.json
+ - cat mattermost-docker/volumes/app/mattermost/config/config.json
  - pushd mattermost-docker
  - docker-compose up -d
  - docker exec -it mattermostdocker_app_1 ./platform version
