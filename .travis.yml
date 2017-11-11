@@ -10,7 +10,8 @@ services:
 
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq tree
+- sudo apt-get install -qq tree nmap
+- nmap localhost -p 80,8065 -A
 
 script:
  - pushd teamcheck
