@@ -12,7 +12,7 @@ script:
  - pushd teamcheck
  - go build
  - popd
- - ll -a
+ - ls -al
  - mkdir mattermost-docker
  - git clone https://github.com/mattermost/mattermost-docker.git mattermost-docker
  - pushd mattermost-docker
