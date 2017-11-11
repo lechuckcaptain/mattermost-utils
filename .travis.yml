@@ -10,8 +10,9 @@ services:
 
 before_install:
   - ls
-  - git clone https://github.com/mattermost/mattermost-docker.git .
-  - ls
+  - mkdir mattermost-docker
+  - git clone https://github.com/mattermost/mattermost-docker.git mattermost-docker
+  - cd mattermost-docker
   - docker-compose build
   - docker-compose up -d
   - docker ps -a
