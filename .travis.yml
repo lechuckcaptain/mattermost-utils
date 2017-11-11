@@ -9,15 +9,21 @@ services:
   - docker
 
 before_install:
-  - ls
+  - ll -a
   - mkdir mattermost-docker
   - git clone https://github.com/mattermost/mattermost-docker.git mattermost-docker
   - pushd mattermost-docker
   - docker-compose build
   - docker-compose up -d
   - docker ps -a
+  - docker-compose down
+  - docker ps -a
   - popd
+  - cp config.json mattermost-docker/volumes/app/mattermost/config/config.json
+  - pushd mattermost-docker
+  - docker-compose up -d
   - docker exec -it mattermostdocker_app_1 ./platform version
+  - popd
 
 script:
  - go version
